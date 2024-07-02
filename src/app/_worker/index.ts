@@ -4,6 +4,7 @@ onmessage = async function (event) {
   const canvas: OffscreenCanvas = event.data.canvas;
   const blobData: Blob[] = event.data.blobs;
   const canvasData: CanvasData[] = event.data.canvasData;
+  const QUALITY = 0.8;
 
   const bitMapPromises: Promise<ImageBitmap>[] = [];
   const blobPromises: Promise<Blob>[] = [];
@@ -34,11 +35,10 @@ onmessage = async function (event) {
     ctx.filter = `contrast(${contrast}) brightness(${brightness}) saturate(${saturation}) sepia(${sepia}) grayscale(${grayscale})`;
     ctx.drawImage(bitMaps[i], sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     blobPromises.push(
-      canvas.convertToBlob({ type: "image/jpeg", quality: 0.8 }),
+      canvas.convertToBlob({ type: "image/jpeg", quality: QUALITY }),
     );
   }
 
   const blobs = await Promise.all(blobPromises);
   postMessage(blobs);
 };
-
