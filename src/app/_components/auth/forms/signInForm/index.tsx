@@ -1,20 +1,17 @@
+import { signIn } from "@/app/_actions";
 import SubmitButton from "@/app/_components/ui/buttons/submitButton";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { signIn } from "../../utils";
+import { signInSchema } from "@/app/_libs/types";
+import { useRef, useState } from "react";
+import { useFormState } from "react-dom";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { mutate, error, status } = useMutation({
-    mutationFn: () => signIn(email, password),
-    onSuccess: () => window.location.reload(),
+  const [formState, action] = useFormState(signIn, {
+    error: null,
+    message: "",
   });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate();
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
@@ -24,18 +21,14 @@ export function LoginForm() {
     setPassword(e.currentTarget.value);
   };
 
-  const isValid = email.length > 0 && password.length > 0;
+  const isValid = signInSchema.safeParse({ email, password }).success;
 
   return (
     <div className="w-[450px]">
       <div className="flex items-center justify-between">
         <p className="text-[25px]">Sign in</p>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        method="post"
-        className="flex flex-col gap-2 mt-2"
-      >
+      <form action={action} className="flex flex-col gap-2 mt-2" ref={formRef}>
         <label className="mt-2">
           <span>Email</span>
           <input
@@ -59,12 +52,15 @@ export function LoginForm() {
           />
         </label>
         <SubmitButton
-          submitStatus={status}
           title="Submit"
-          disabled={!isValid || status === "pending" || status === "success"}
+          disabled={!isValid}
+          onClick={() => {
+            if (!formRef.current) return;
+            formRef.current.requestSubmit();
+          }}
         />
       </form>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {formState.error && <p className="text-red-500">{formState.error}</p>}
     </div>
   );
 }

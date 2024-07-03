@@ -1,10 +1,6 @@
 import api from "@/config";
 import { UserComment } from "../../types";
 
-export function handlePostProfileImage(formData: FormData) {
-  return api.post(`auth/profile`, formData);
-}
-
 export function handleAddPost(formData: FormData) {
   return api.post("posts", formData);
 }

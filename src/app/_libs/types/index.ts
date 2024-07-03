@@ -139,3 +139,16 @@ export type PaginatedPosts = {
   nextCursor: number | null;
   posts: Post[];
 };
+
+export const signUpSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1, "Passwords must contain least 1 character"),
+  name: z.string(),
+  username: z.string(),
+});
+
+export const signInSchema = signUpSchema.pick({ email: true, password: true });
+
+export const verifySchema = signUpSchema
+  .pick({ email: true })
+  .extend({ token: z.string().length(6) });

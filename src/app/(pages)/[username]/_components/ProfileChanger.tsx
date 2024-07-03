@@ -3,8 +3,8 @@ import Throbber, { ThrobberSize } from "@/app/_components/ui/loaders";
 import { useDataContext } from "@/app/_libs/contexts/providers/ServerContextProvider";
 import { useRef } from "react";
 import { useFormStatus } from "react-dom";
-import { addProfileImage } from "../_utils/actions";
 import ProfileImage from "./ProfileImage";
+import { addProfileImage } from "@/app/_actions";
 
 // TODO: add ui notifying user when their profile image is being updated. Current throbber choice can be hard to see depending on image background.
 
@@ -20,7 +20,7 @@ export default function ProfileChanger({ twSize }: { twSize?: string }) {
 
   return (
     <form ref={formRef} action={handleUploadProfileImage}>
-      <ProfileImagePlaceHolder
+      <ProfileImagePlaceholder
         imageURL={serverData.profile.imageURL}
         twSize={twSize}
       />
@@ -40,7 +40,7 @@ export default function ProfileChanger({ twSize }: { twSize?: string }) {
   );
 }
 
-function ProfileImagePlaceHolder({
+function ProfileImagePlaceholder({
   imageURL,
   twSize,
 }: {

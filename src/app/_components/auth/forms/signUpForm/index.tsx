@@ -1,8 +1,9 @@
 "use client";
+import { signUp } from "@/app/_actions";
 import SubmitButton from "@/app/_components/ui/buttons/submitButton";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { signUp } from "../../utils";
+import { signUpSchema } from "@/app/_libs/types";
+import { useRef, useState } from "react";
+import { useFormState } from "react-dom";
 import { VerificationForm } from "../verificationForm";
 
 export type SignUpInfo = {
@@ -19,24 +20,11 @@ export function SignUpForm() {
     username: "",
     name: "",
   });
-  const [readyToVerify, setReadyToVerify] = useState(false);
-  const { mutate, error, status } = useMutation({
-    mutationFn: () =>
-      signUp(
-        signUpInfo.email,
-        signUpInfo.password,
-        signUpInfo.username,
-        signUpInfo.name,
-      ),
-    onSuccess: () => {
-      setReadyToVerify(true);
-    },
+  const [formState, action] = useFormState(signUp, {
+    error: null,
+    message: "",
   });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate();
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSignUpInfo({
@@ -45,16 +33,22 @@ export function SignUpForm() {
     });
   };
 
-  const isValid = Object.values(signUpInfo).every((value) => value.length > 0);
+  const isValid = signUpSchema.safeParse({
+    email: signUpInfo.email,
+    password: signUpInfo.password,
+    username: signUpInfo.username,
+    name: signUpInfo.name,
+  }).success;
 
-  if (readyToVerify) return <VerificationForm email={signUpInfo.email} />;
+  if (formState.message === "Success")
+    return <VerificationForm email={signUpInfo.email} />;
 
   return (
     <div className="w-[450px]">
       <div className="flex items-center justify-between">
         <p className="text-[25px]">Sign up</p>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-2">
+      <form action={action} className="flex flex-col gap-2 mt-2" ref={formRef}>
         <label className="mt-2">
           <span>Username</span>
           <input
@@ -98,12 +92,15 @@ export function SignUpForm() {
           />
         </label>
         <SubmitButton
-          submitStatus={status}
           title="Submit"
-          disabled={!isValid || status === "pending" || status === "success"}
+          disabled={!isValid}
+          onClick={() => {
+            if (!formRef.current) return;
+            formRef.current.requestSubmit();
+          }}
         />
       </form>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {formState.error && <p className="text-red-500">{formState.error}</p>}
     </div>
   );
 }

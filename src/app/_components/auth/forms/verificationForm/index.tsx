@@ -1,7 +1,7 @@
+import { verifyEmail } from "@/app/_actions";
 import SubmitButton from "@/app/_components/ui/buttons/submitButton";
-import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { verifyEmail } from "../../utils";
+import { useFormState, useFormStatus } from "react-dom";
 
 const VERIFICATION_CODE_LENGTH = 6;
 
@@ -16,28 +16,19 @@ export function VerificationForm({
 }: VeriProps) {
   const [keys, setKeys] = useState(Array(count).fill(""));
   const [current, setCurrent] = useState(0);
-  const { mutate, error, status, isPending } = useMutation({
-    mutationFn: () => verifyEmail(email, keys.join("")),
-    onSuccess: () => {
-      window.location.reload();
-    },
+  const [formState, action] = useFormState(verifyEmail, {
+    error: null,
+    message: "",
   });
+  const formRef = useRef<HTMLFormElement>(null);
 
   const isValid = keys.every((k) => k.length > 0);
   const cubes = [];
-  const ref = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (!isValid || !ref.current) return;
-    ref.current.dispatchEvent(
-      new Event("submit", { cancelable: true, bubbles: true }),
-    );
+    if (!isValid || !formRef.current) return;
+    formRef.current.requestSubmit();
   }, [isValid]);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate();
-  };
 
   for (let i = 0; i < count; i++) {
     cubes.push(
@@ -48,7 +39,6 @@ export function VerificationForm({
         index={i}
         keys={keys}
         setKeys={setKeys}
-        submitting={isPending}
       />,
     );
   }
@@ -61,16 +51,16 @@ export function VerificationForm({
         <span className="font-semibold text-text-primary">{email}</span>
       </p>
       <p>Confirm it belongs to you to keep your account secure.</p>
-      <form ref={ref} onSubmit={handleSubmit}>
+      <form ref={formRef} action={action}>
         <div className="flex justify-between mt-4 gap-4">{cubes}</div>
+        <input name="email" value={email} hidden />
         <SubmitButton
-          submitStatus={status}
           title="Submit"
-          disabled={!isValid || status === "pending" || status === "success"}
+          disabled={!isValid}
           className="m-auto w-full mt-4"
         />
       </form>
-      {error && <p className="text-red-500">{error.message}</p>}
+      {formState.error && <p className="text-red-500">{formState.error}</p>}
     </div>
   );
 }
@@ -79,7 +69,6 @@ type CubeProps = {
   index: number;
   cursorIndex: number;
   keys: string[];
-  submitting: boolean;
   setCursorIndex: (i: number) => void;
   setKeys: (k: string[]) => void;
 };
@@ -88,10 +77,10 @@ function Cube({
   index,
   cursorIndex,
   keys,
-  submitting,
   setCursorIndex,
   setKeys,
 }: CubeProps) {
+  const { pending } = useFormStatus();
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -130,8 +119,9 @@ function Cube({
 
   return (
     <input
-      className="w-10 py-2 outline rounded-md text-center"
+      className="w-10 py-2 outline rounded-md text-center text-black"
       ref={ref}
+      name="code"
       value={keys[index]}
       type="text"
       size={1}
@@ -139,7 +129,7 @@ function Cube({
       maxLength={1}
       onKeyDown={handleKeyDown}
       autoComplete="off"
-      disabled={submitting}
+      disabled={pending}
     />
   );
 }
