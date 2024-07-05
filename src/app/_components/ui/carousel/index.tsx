@@ -139,12 +139,11 @@ export function CarouselArrow({
 }) {
   return (
     <IconButton
-      as="button"
       icon={direction === "l" ? IconType.ArrowLeft : IconType.ArrowRight}
-      handleClick={onClick}
+      onClick={onClick}
       className={twMerge(
         "backdrop-blur-xl bg-opacity-20 text-text-primary p-1 hover:bg-btn-hover-transparent",
-        className
+        className,
       )}
     />
   );
@@ -162,8 +161,9 @@ export function CarouselPagination({
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className={`w-[6px] h-[6px] transition-colors duration-100 ease-in-out rounded-full ${i === currIndex ? "bg-white" : "bg-black"
-            }`}
+          className={`w-[6px] h-[6px] transition-colors duration-100 ease-in-out rounded-full ${
+            i === currIndex ? "bg-white" : "bg-black"
+          }`}
         />
       ))}
     </div>

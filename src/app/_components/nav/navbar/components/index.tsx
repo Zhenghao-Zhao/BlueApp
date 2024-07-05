@@ -11,9 +11,8 @@ export default function NavMenu({ setIsOpen }: Props) {
   return (
     <div className="flex items-center">
       <IconButton
-        as="button"
         icon={IconType.Search}
-        handleClick={() => setIsOpen(true)}
+        onClick={() => setIsOpen(true)}
         className="sm:hidden p-2"
         tip="Search"
       />

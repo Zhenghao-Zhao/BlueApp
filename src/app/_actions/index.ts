@@ -131,11 +131,12 @@ export async function signOut() {
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
   if (error) {
-    return { errors: { _error: error.message } };
+    return {
+      error: error.message,
+      message: "",
+    };
   }
-  return {
-    data: "successful",
-  };
+  return { error: null, message: "Success" };
 }
 
 export async function verifyEmail(_prevState: any, formData: FormData) {

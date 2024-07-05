@@ -37,10 +37,9 @@ type MiniProps = {
 export function MiniGuideEntry({ icon, title }: MiniProps) {
   return (
     <IconButton
-      as="button"
       className="flex-col w-16 py-4 rounded-lg gap-[6px]"
       icon={icon}
-      label={title}
+      title={title}
     />
   );
 }

@@ -3,10 +3,11 @@ import SubmitButton from "@/app/_components/ui/buttons/submitButton";
 import { signInSchema } from "@/app/_libs/types";
 import { useRef, useState } from "react";
 import { useFormState } from "react-dom";
-
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showEmailValidation, setShowEmailValidation] = useState(false);
+  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
   const [formState, action] = useFormState(signIn, {
     error: null,
     message: "",
@@ -21,7 +22,11 @@ export function LoginForm() {
     setPassword(e.currentTarget.value);
   };
 
-  const isValid = signInSchema.safeParse({ email, password }).success;
+  const validation = signInSchema.safeParse({ email, password });
+  const isValid = validation.success;
+  const errors = validation.error?.flatten();
+  const emailError = errors && errors.fieldErrors.email;
+  const passwordError = errors && errors.fieldErrors.password;
 
   return (
     <div className="w-[450px]">
@@ -37,9 +42,13 @@ export function LoginForm() {
             className="bg-btn-primary w-full p-2 rounded-md"
             name="email"
             onChange={handleEmailChange}
+            onBlur={() => setShowEmailValidation(true)}
             autoComplete="on"
           />
         </label>
+        {showEmailValidation && emailError && (
+          <p className="text-red-500">{emailError}</p>
+        )}
         <label className="mt-2">
           <span>Password</span>
           <input
@@ -48,9 +57,13 @@ export function LoginForm() {
             className="bg-btn-primary w-full p-2 rounded-md"
             name="password"
             onChange={handlePasswordChange}
+            onBlur={() => setShowPasswordValidation(true)}
             autoComplete="on"
           />
         </label>
+        {showPasswordValidation && passwordError && (
+          <p className="text-red-500">{passwordError}</p>
+        )}
         <SubmitButton
           title="Submit"
           disabled={!isValid}
@@ -58,6 +71,7 @@ export function LoginForm() {
             if (!formRef.current) return;
             formRef.current.requestSubmit();
           }}
+          className="mt-4"
         />
       </form>
       {formState.error && <p className="text-red-500">{formState.error}</p>}

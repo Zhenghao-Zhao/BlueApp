@@ -28,9 +28,8 @@ export default function Navbar() {
         } items-center shrink-0 h-full px-2 space-x-6`}
       >
         <IconButton
-          as="button"
           icon={IconType.Menu}
-          handleClick={toggleGuide}
+          onClick={toggleGuide}
           className="p-2"
         />
         <Link href="/">
@@ -39,9 +38,8 @@ export default function Navbar() {
       </div>
       {isOpen && (
         <IconButton
-          as="button"
           icon={IconType.ArrowLeft}
-          handleClick={() => setIsOpen(false)}
+          onClick={() => setIsOpen(false)}
           className="sm:hidden mx-4"
         />
       )}

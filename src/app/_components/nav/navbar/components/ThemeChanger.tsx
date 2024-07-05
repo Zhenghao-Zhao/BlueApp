@@ -1,5 +1,8 @@
 import { IconButton } from "@/app/_components/ui/buttons";
-import { DropdownContent, DropdownTrigger } from "@/app/_components/ui/dropdown";
+import {
+  DropdownContent,
+  DropdownTrigger,
+} from "@/app/_components/ui/dropdown";
 import Dropdown from "@/app/_libs/contexts/providers/DropdownContextProvider";
 import { useEffect, useState } from "react";
 
@@ -11,13 +14,13 @@ export default function ThemeChanger() {
   function ThemeEntry({ label, id }: { label: string; id: Theme }) {
     return (
       <IconButton
-        as="button"
-        label={label}
+        title={label}
         icon={id}
-        className={`hover:bg-btn-hover-primary rounded-lg px-2 py-1 ${id === activeTheme && "bg-btn-hover-primary"
-          }`}
+        className={`hover:bg-btn-hover-primary rounded-lg px-2 py-1 ${
+          id === activeTheme && "bg-btn-hover-primary"
+        }`}
         iconClassName="mr-2"
-        handleClick={() => switchTheme(id, setActiveTheme)}
+        onClick={() => switchTheme(id, setActiveTheme)}
       />
     );
   }
@@ -30,7 +33,7 @@ export default function ThemeChanger() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <IconButton as="button" icon={activeTheme} tip="Change theme" className="p-2" />
+        <IconButton icon={activeTheme} tip="Change theme" className="p-2" />
       </DropdownTrigger>
       <DropdownContent>
         <div className="rounded-lg p-2 flex flex-col space-y-1">

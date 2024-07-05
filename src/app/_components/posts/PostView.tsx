@@ -180,10 +180,9 @@ export function PostOptions({ post }: { post: Post }) {
     <>
       <div className="flex h-comment-info-height items-center px-2 justify-center shrink-0">
         <IconButton
-          as="button"
           icon={post.has_liked ? IconType.Heart : IconType.EmptyHeart}
           tip={post.has_liked ? "Unlike" : "Like"}
-          handleClick={handleLikeClick}
+          onClick={handleLikeClick}
           showHighlight={false}
         />
         <p className="grow ml-2">

@@ -106,12 +106,11 @@ function Comment({
         </div>
       </div>
       <IconButton
-        as="button"
         icon={comment.has_liked ? IconType.Heart : IconType.EmptyHeart}
         tip={comment.has_liked ? "Unlike" : "Like"}
-        handleClick={() => handleLikeClick(comment.uid, !comment.has_liked)}
+        onClick={() => handleLikeClick(comment.uid, !comment.has_liked)}
         showHighlight={false}
-        twSize="size-5"
+        iconClassName="size-5"
       />
     </div>
   );

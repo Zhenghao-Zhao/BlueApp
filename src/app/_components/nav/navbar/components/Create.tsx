@@ -12,7 +12,6 @@ export default function Create() {
     <Modal alertOnCloseInit={false} alert={<DiscardAlert />}>
       <ModalTrigger>
         <IconButton
-          as="button"
           icon={IconType.Create}
           tip="Create new post"
           className="p-2"

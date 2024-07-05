@@ -1,34 +1,28 @@
 import ProfileImage from "@/app/(pages)/[username]/_components/ProfileImage";
-import { signOut } from "@/app/_components/auth/utils";
-import { IconButton } from "@/app/_components/ui/buttons";
+import { signOut } from "@/app/_actions";
+import { SubmitButton } from "@/app/_components/ui/buttons";
 import {
   DropdownContent,
   DropdownTrigger,
 } from "@/app/_components/ui/dropdown";
-import { IconType } from "@/app/_components/ui/icons";
 import TooltipWrapper from "@/app/_components/ui/tooltip";
 import Dropdown from "@/app/_libs/contexts/providers/DropdownContextProvider";
 import { useDataContext } from "@/app/_libs/contexts/providers/ServerContextProvider";
-import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
+import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
 export default function ProfileMenu() {
   const { data } = useDataContext();
-  const profileRef = useRef<HTMLButtonElement>(null);
-  const { mutate } = useMutation({
-    mutationFn: () => signOut(),
-    onSuccess: async () => {
-      window.location.reload();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+  const [formState, action] = useFormState(signOut, {
+    error: null,
+    message: "",
   });
+  const profileRef = useRef<HTMLButtonElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleClick = async () => {
-    mutate();
-  };
+  if (formState.error) toast.error(formState.error);
+
   return (
     <div>
       <Dropdown>
@@ -46,13 +40,16 @@ export default function ProfileMenu() {
           </DropdownTrigger>
         </TooltipWrapper>
         <DropdownContent>
-          <IconButton
-            as="button"
-            icon={IconType.SignOut}
-            label="Sign out"
-            className="gap-2 w-fit h-full p-2 shrink-0"
-            handleClick={handleClick}
-          />
+          <form action={action} ref={formRef}>
+            <SubmitButton
+              title="Sign out"
+              className="w-[100px] h-full p-2 shrink-0 bg-inherit hover:bg-btn-hover-primary"
+              onClick={() => {
+                if (!formRef.current) return;
+                formRef.current.requestSubmit();
+              }}
+            />
+          </form>
         </DropdownContent>
       </Dropdown>
     </div>

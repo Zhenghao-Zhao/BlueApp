@@ -19,7 +19,7 @@ export default function SubmitButton({
   return (
     <button
       className={twMerge(
-        "bg-blue-500 h-[45px] rounded-md mt-4 text-white disabled:bg-gray-400 flex items-center justify-center",
+        "bg-blue-500 h-[45px] rounded-md text-white disabled:bg-gray-400 flex items-center justify-center",
         className,
       )}
       disabled={disabled || pending}

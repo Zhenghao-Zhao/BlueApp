@@ -57,19 +57,17 @@ export default function GuideSection({
   const collapseButton =
     collapseSize >= entries.length ? null : isCollapsed ? (
       <IconButton
-        as="button"
         icon={IconType.ArrowDown}
         className="rounded-lg px-4 gap-6"
-        label={`Show More`}
-        handleClick={handleClick}
+        title={`Show More`}
+        onClick={handleClick}
       />
     ) : (
       <IconButton
-        as="button"
         icon={IconType.ArrowUp}
         className="rounded-lg px-4 gap-6"
-        label={`Show Fewer`}
-        handleClick={handleClick}
+        title={`Show Fewer`}
+        onClick={handleClick}
       />
     );
 

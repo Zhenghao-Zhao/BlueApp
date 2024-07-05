@@ -32,9 +32,8 @@ export default function OverlayGuide() {
       >
         <div className="flex space-x-6 items-center shrink-0 h-nav-height w-guide-normal px-4">
           <IconButton
-            as="button"
             icon={IconType.Menu}
-            handleClick={() => setOverlayGuide(false)}
+            onClick={() => setOverlayGuide(false)}
             className="p-2"
           />
           <Link href="/">

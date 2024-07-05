@@ -143,8 +143,8 @@ export type PaginatedPosts = {
 export const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, "Passwords must contain least 1 character"),
-  name: z.string(),
-  username: z.string(),
+  name: z.string().min(1, "Passwords must contain least 1 character"),
+  username: z.string().min(1, "Passwords must contain least 1 character"),
 });
 
 export const signInSchema = signUpSchema.pick({ email: true, password: true });
