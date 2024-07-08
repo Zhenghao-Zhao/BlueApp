@@ -17,6 +17,8 @@ export default function Content({ initData }: { initData: Post }) {
     queryKey: ["posts", initData.uid],
     queryFn: () => getPost(initData.uid),
     initialData: initData,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
   return (
     <main className="w-full flex flex-col max-w-grid-maxWidth">
@@ -62,8 +64,9 @@ export default function Content({ initData }: { initData: Post }) {
       </section>
       <section className="w-full grow px-carousel-arrow-width flex flex-col min-h-[200px]">
         <header className="font-bold text-xl mt-4">
-          {post.comment_count?.toLocaleString()}{" "}
-          {post.comment_count === 1 ? "Comment" : "Comments"}
+          {`${post.comment_count?.toLocaleString()} ${
+            post.comment_count === 1 ? "Comment" : "Comments"
+          } `}
         </header>
         <Comments post_uid={post.uid} className="px-0" />
       </section>

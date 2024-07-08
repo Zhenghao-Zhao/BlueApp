@@ -1,10 +1,11 @@
 import ProfileImage from "@/app/(pages)/[username]/_components/ProfileImage";
+import IconLink from "@/app/_components/ui/buttons/iconLink";
 import { useDataContext } from "@/app/_libs/contexts/providers/ServerContextProvider";
-import { IconType, icons } from "../../../ui/icons";
-import { IconButton } from "@/app/_components/ui/buttons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { icons } from "../../../ui/icons";
 
-type Props = {
+export type GuideEntryProps = {
   icon?: string;
   title: string;
   url: string;
@@ -12,12 +13,13 @@ type Props = {
   image?: string;
 };
 
-export function GuideEntry({ icon, title, url, image }: Props) {
+export function GuideEntry({ icon, title, url, image }: GuideEntryProps) {
   const { data } = useDataContext();
+  const pathname = usePathname();
   return (
     <Link
       href={url ?? data.profile.username}
-      className="flex flex-shrink-0 items-center hover:bg-btn-hover-primary px-4 h-10 rounded-lg"
+      className={`flex flex-shrink-0 items-center hover:bg-btn-hover-primary px-4 h-10 rounded-lg ${pathname === url && "bg-btn-hover-primary"}`}
     >
       {(icon && <div className="w-6 mr-6">{icons[icon]}</div>) || (
         <div className="mr-6">
@@ -30,16 +32,19 @@ export function GuideEntry({ icon, title, url, image }: Props) {
 }
 
 type MiniProps = {
-  icon: IconType;
+  icon: string;
   title: string;
+  url: string;
 };
 
-export function MiniGuideEntry({ icon, title }: MiniProps) {
+export function MiniGuideEntry({ icon, title, url }: MiniProps) {
+  const pathname = usePathname();
   return (
-    <IconButton
-      className="flex-col w-16 py-4 rounded-lg gap-[6px]"
+    <IconLink
+      href={url}
       icon={icon}
       title={title}
+      className={`flex-col w-16 py-4 rounded-lg gap-[6px] ${pathname === url && "bg-btn-hover-primary"}`}
     />
   );
 }

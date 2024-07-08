@@ -115,21 +115,6 @@ export type Friend = z.infer<typeof friendSchema>;
 
 export type Friendship = "followers" | "followees";
 
-export type GuideEntryType = {
-  name: string;
-  url: string;
-  icon?: string;
-  image?: string;
-};
-
-export type GuideSectionType = {
-  title: string;
-  collapseSize?: number;
-  icon?: string;
-  entries: GuideEntryType[];
-  isEntriesLoading?: boolean;
-};
-
 export type DropdownPosition = {
   left: number;
   top: number;

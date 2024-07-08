@@ -1,9 +1,9 @@
+import Divider from "@/app/_components/ui/divider";
 import { useDataContext } from "@/app/_libs/contexts/providers/ServerContextProvider";
 import { twMerge } from "tailwind-merge";
 import { GuideTypes } from "..";
 import { useGuidebarContext } from "../../../../_libs/contexts/providers/GuidebarContextProvider";
 import GuideSection from "./GuideSection";
-import Divider from "@/app/_components/ui/divider";
 
 type Props = {
   className?: string;
@@ -12,7 +12,6 @@ type Props = {
 export default function GuideBar({ className }: Props) {
   const { guideLayout } = useGuidebarContext();
   const { data: serverData } = useDataContext();
-
   const username = serverData.profile.username;
   const sections = getGuideData(username);
 
@@ -22,14 +21,14 @@ export default function GuideBar({ className }: Props) {
         `hidden scrollbar-hidden flex-col items-center w-guide-normal fixed top-14 bottom-0 overflow-y-scroll text-sm bg-background-primary ${
           guideLayout === GuideTypes.Regular ? "lgGb:flex" : "lgGb:hidden"
         }`,
-        className
+        className,
       )}
     >
       <GuideSection title={sections[0].title} entries={sections[0].entries} />
       <Divider />
       <GuideSection title={sections[1].title} entries={sections[1].entries} />
       <Divider />
-      <GuideSection title={sections[3].title} entries={sections[3].entries} />
+      <GuideSection title={sections[2].title} entries={sections[2].entries} />
       <Divider />
       <div className="guide-section !border-none p-4 !pb-6">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, molestiae
@@ -46,14 +45,16 @@ function getGuideData(username: string) {
       title: "",
       entries: [
         {
-          name: "Home",
+          title: "Home",
           url: "/",
           icon: "home",
+          id: 0,
         },
         {
-          name: "Exposition",
+          title: "Exposition",
           url: "/explore",
           icon: "explore",
+          id: 1,
         },
       ],
     },
@@ -64,64 +65,69 @@ function getGuideData(username: string) {
       icon: "arrowRight",
       entries: [
         {
-          name: "Your collection",
+          title: "Your collection",
           url: "/" + username,
           icon: "you",
+          id: 2,
         },
         {
-          name: "Bookmarks",
+          title: "Bookmarks",
           url: "#",
           icon: "library",
+          id: 3,
         },
       ],
-    },
-    {
-      title: "Recent following",
-      collapse: 7,
-      entries: [],
     },
     {
       title: "Explore",
       entries: [
         {
-          name: "Trending",
+          title: "Trending",
           url: "#",
           icon: "trending",
+          id: 4,
         },
         {
-          name: "Music",
+          title: "Music",
           url: "#",
           icon: "music",
+          id: 5,
         },
         {
-          name: "Films",
+          title: "Films",
           url: "#",
           icon: "films",
+          id: 6,
         },
         {
-          name: "Live",
+          title: "Live",
           url: "#",
           icon: "live",
+          id: 7,
         },
         {
-          name: "Gaming",
+          title: "Gaming",
           url: "#",
           icon: "gaming",
+          id: 8,
         },
         {
-          name: "News",
+          title: "News",
           url: "#",
           icon: "news",
+          id: 9,
         },
         {
-          name: "Sports",
+          title: "Sports",
           url: "#",
           icon: "sports",
+          id: 10,
         },
         {
-          name: "Podcasts",
+          title: "Podcasts",
           url: "#",
           icon: "podcasts",
+          id: 11,
         },
       ],
     },
@@ -129,3 +135,5 @@ function getGuideData(username: string) {
 
   return guideData;
 }
+
+function getEntryIdFromPathname(pathname: string) {}

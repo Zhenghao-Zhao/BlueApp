@@ -8,20 +8,23 @@ import { Pagination, STATUS_CODES } from "../../_utils/constants";
 
 export async function GET(
   request: NextRequest,
-  { params: { uid } }: { params: { uid: string } }
+  { params: { uid } }: { params: { uid: string } },
 ) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: STATUS_CODES.UNAUTHORIZED });
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: STATUS_CODES.UNAUTHORIZED },
+    );
   }
   const page = request.nextUrl.searchParams.get("page");
   if (!page) {
     return NextResponse.json(
       { message: "Bad request, missing page number" },
-      { status: STATUS_CODES.BAD_REQUEST }
+      { status: STATUS_CODES.BAD_REQUEST },
     );
   }
   const query = request.nextUrl.searchParams.get("query");
@@ -31,7 +34,7 @@ export async function GET(
       user.id,
       uid,
       parseInt(page),
-      Pagination.LIMIT_FOLLOWEES
+      Pagination.LIMIT_FOLLOWEES,
     );
     if (error)
       return NextResponse.json(error, { status: STATUS_CODES.SERVER_ERROR });
@@ -42,7 +45,7 @@ export async function GET(
       uid,
       query,
       parseInt(page),
-      Pagination.LIMIT_FOLLOWEES
+      Pagination.LIMIT_FOLLOWEES,
     );
     if (error)
       return NextResponse.json(error, { status: STATUS_CODES.SERVER_ERROR });
@@ -50,7 +53,7 @@ export async function GET(
   } else {
     return NextResponse.json(
       { message: "Query length cannot be zero" },
-      { status: STATUS_CODES.BAD_REQUEST }
+      { status: STATUS_CODES.BAD_REQUEST },
     );
   }
 }

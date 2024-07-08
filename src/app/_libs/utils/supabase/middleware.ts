@@ -8,6 +8,8 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  console.log("response:", response.body);
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -53,7 +55,6 @@ export async function updateSession(request: NextRequest) {
       },
     },
   );
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -66,6 +67,7 @@ export async function updateSession(request: NextRequest) {
       const homeUrl = new URL("/", request.nextUrl.origin);
       return NextResponse.redirect(homeUrl);
     }
+    request.headers.set("x-user-id", user.id);
   }
 
   return response;

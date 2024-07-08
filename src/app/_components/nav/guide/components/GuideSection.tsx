@@ -1,15 +1,22 @@
 import { IconButton } from "@/app/_components/ui/buttons";
-import { GuideSectionType } from "@/app/_libs/types";
 import { useMemo, useState } from "react";
 import { IconType, icons } from "../../../ui/icons";
-import { GuideEntry } from "./GuideEntry";
+import { GuideEntry, GuideEntryProps } from "./GuideEntry";
+
+type GuideSectionProps = {
+  title: string;
+  collapseSize?: number;
+  icon?: string;
+  entries: GuideEntryProps[];
+  isEntriesLoading?: boolean;
+};
 
 export default function GuideSection({
   title,
   entries,
   icon,
   collapseSize = entries.length,
-}: GuideSectionType) {
+}: GuideSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleClick = () => {
@@ -23,7 +30,7 @@ export default function GuideSection({
           <GuideEntry
             key={i}
             icon={curr.icon}
-            title={curr.name}
+            title={curr.title}
             url={curr.url}
             image={curr.image}
           />,
@@ -43,7 +50,7 @@ export default function GuideSection({
                 <GuideEntry
                   key={i}
                   icon={curr.icon}
-                  title={curr.name}
+                  title={curr.title}
                   url={curr.url}
                   image={curr.image}
                 />,
@@ -71,20 +78,17 @@ export default function GuideSection({
       />
     );
 
-  const data = (
-    <div>
-      {openEntries}
-      {!isCollapsed && collapsedEntries}
-      {collapseButton}
-    </div>
-  );
   return (
     <div className="w-full flex flex-col px-2">
       <div className="flex items-center px-4">
         {title && <p className="font-semibold text-[16px] py-2">{title}</p>}
         {icon !== undefined && <div className="w-5 ml-2">{icons[icon]}</div>}
       </div>
-      {data}
+      <div>
+        {openEntries}
+        {!isCollapsed && collapsedEntries}
+        {collapseButton}
+      </div>
     </div>
   );
 }
